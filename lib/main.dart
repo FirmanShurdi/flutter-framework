@@ -14,9 +14,7 @@ import 'home.dart';
 void main() {
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
       child: const MyApp(),
     ),
   );
@@ -29,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Parkir',
+      title: 'taskpage',
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Roboto',
@@ -56,7 +54,9 @@ class _AuthPageState extends State<AuthPage>
   static const Color panel = Color(0xFFFFFFFF);
 
   bool isRegister = false;
-  final ValueNotifier<Offset?> hoverPointNotifier = ValueNotifier<Offset?>(null);
+  final ValueNotifier<Offset?> hoverPointNotifier = ValueNotifier<Offset?>(
+    null,
+  );
 
   final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _registerKey = GlobalKey<FormState>();
@@ -150,13 +150,13 @@ class _AuthPageState extends State<AuthPage>
       _showToast('Periksa kembali data login.', success: false);
       return;
     }
-    
+
     final provider = Provider.of<AuthProvider>(context, listen: false);
     final success = await provider.login(
       _loginEmail.text.trim(),
       _loginPassword.text,
     );
-    
+
     if (!mounted) return;
     if (success) {
       Navigator.of(context).pushReplacement(
@@ -174,13 +174,13 @@ class _AuthPageState extends State<AuthPage>
       _showToast('Periksa kembali data pendaftaran.', success: false);
       return;
     }
-    
+
     final provider = Provider.of<AuthProvider>(context, listen: false);
     final success = await provider.register(
       _regEmail.text.trim(),
       _regPassword.text,
     );
-    
+
     if (!mounted) return;
     if (success) {
       Navigator.of(context).pushReplacement(
@@ -256,345 +256,331 @@ class _AuthPageState extends State<AuthPage>
             child: SafeArea(
               child: Center(
                 child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final width = constraints.maxWidth;
-                        final isCompact = width <= 900;
-                        final frameWidth = isCompact
-                            ? math.min(width, 720.0)
-                            : math.min(width * 0.94, 1000.0);
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth;
+                    final isCompact = width <= 900;
+                    final frameWidth = isCompact
+                        ? math.min(width, 720.0)
+                        : math.min(width * 0.94, 1000.0);
 
-                        if (isCompact) {
-                          return _buildCompactFrame(frameWidth);
-                        }
+                    if (isCompact) {
+                      return _buildCompactFrame(frameWidth);
+                    }
 
-                        return MouseRegion(
-                          onHover: (event) {
-                            final box =
-                                context.findRenderObject() as RenderBox?;
-                            if (box == null) return;
-                            final local = box.globalToLocal(event.position);
-                            final x = (local.dx / box.size.width).clamp(
-                              0.0,
-                              1.0,
-                            );
-                            final y = (local.dy / box.size.height).clamp(
-                              0.0,
-                              1.0,
-                            );
-                            hoverPointNotifier.value = Offset(x, y);
-                          },
-                          onExit: (_) {
-                            hoverPointNotifier.value = null;
-                          },
-                          child: ValueListenableBuilder<Offset?>(
-                            valueListenable: hoverPointNotifier,
-                            builder: (context, hoverPointValue, child) {
-                              final bool hoverFrame = hoverPointValue != null;
-                              return AnimatedContainer(
-                                duration: const Duration(milliseconds: 450),
-                                curve: Curves.easeOut,
-                                width: frameWidth,
-                                height: 560,
-                                transform: _frameTransform(hoverPointValue),
-                                decoration: BoxDecoration(
-                                  color: panel,
-                                  borderRadius: BorderRadius.circular(22),
-                                  boxShadow: hoverFrame
-                                      ? <BoxShadow>[
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.18,
-                                            ),
-                                            blurRadius: 60,
-                                            offset: const Offset(0, 20),
-                                          ),
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.08,
-                                            ),
-                                            blurRadius: 18,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ]
-                                      : <BoxShadow>[
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.18,
-                                            ),
-                                            blurRadius: 50,
-                                            offset: const Offset(0, 16),
-                                          ),
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.10,
-                                            ),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 3),
-                                          ),
-                                        ],
-                                ),
-                                child: child,
-                              );
-                            },
-                            child: ClipRRect(
+                    return MouseRegion(
+                      onHover: (event) {
+                        final box = context.findRenderObject() as RenderBox?;
+                        if (box == null) return;
+                        final local = box.globalToLocal(event.position);
+                        final x = (local.dx / box.size.width).clamp(0.0, 1.0);
+                        final y = (local.dy / box.size.height).clamp(0.0, 1.0);
+                        hoverPointNotifier.value = Offset(x, y);
+                      },
+                      onExit: (_) {
+                        hoverPointNotifier.value = null;
+                      },
+                      child: ValueListenableBuilder<Offset?>(
+                        valueListenable: hoverPointNotifier,
+                        builder: (context, hoverPointValue, child) {
+                          final bool hoverFrame = hoverPointValue != null;
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 450),
+                            curve: Curves.easeOut,
+                            width: frameWidth,
+                            height: 560,
+                            transform: _frameTransform(hoverPointValue),
+                            decoration: BoxDecoration(
+                              color: panel,
                               borderRadius: BorderRadius.circular(22),
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned.fill(
-                                    child: Container(color: panel),
-                                  ),
-                                  Positioned.fill(
-                                    child: TweenAnimationBuilder<double>(
-                                      tween: Tween<double>(
-                                        begin: isRegister ? 1.0 : 0.0,
-                                        end: isRegister ? 1.0 : 0.0,
+                              boxShadow: hoverFrame
+                                  ? <BoxShadow>[
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.18,
+                                        ),
+                                        blurRadius: 60,
+                                        offset: const Offset(0, 20),
                                       ),
-                                      duration: const Duration(milliseconds: 600),
-                                      curve: Curves.easeOutCubic,
-                                      builder: (context, t, child) {
-                                        return ClipPath(
-                                          clipper: _WedgeClipper(t: t),
-                                          child: child,
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.08,
+                                        ),
+                                        blurRadius: 18,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ]
+                                  : <BoxShadow>[
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.18,
+                                        ),
+                                        blurRadius: 50,
+                                        offset: const Offset(0, 16),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.10,
+                                        ),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                            ),
+                            child: child,
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned.fill(child: Container(color: panel)),
+                              Positioned.fill(
+                                child: TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    begin: isRegister ? 1.0 : 0.0,
+                                    end: isRegister ? 1.0 : 0.0,
+                                  ),
+                                  duration: const Duration(milliseconds: 600),
+                                  curve: Curves.easeOutCubic,
+                                  builder: (context, t, child) {
+                                    return ClipPath(
+                                      clipper: _WedgeClipper(t: t),
+                                      child: child,
+                                    );
+                                  },
+                                  child: Container(
+                                    color: const Color(0xFF0A0A0A),
+                                    child: ValueListenableBuilder<Offset?>(
+                                      valueListenable: hoverPointNotifier,
+                                      builder: (context, val, _) {
+                                        final hp =
+                                            val ?? const Offset(0.5, 0.5);
+                                        return CustomPaint(
+                                          painter: _WedgeSheenPainter(
+                                            activeX:
+                                                0.60 + (hp.dx - 0.5) * 0.18,
+                                            activeY:
+                                                0.10 + (hp.dy - 0.5) * 0.24,
+                                          ),
                                         );
                                       },
-                                      child: Container(
-                                        color: const Color(0xFF0A0A0A),
-                                        child: ValueListenableBuilder<Offset?>(
-                                          valueListenable: hoverPointNotifier,
-                                          builder: (context, val, _) {
-                                            final hp = val ?? const Offset(0.5, 0.5);
-                                            return CustomPaint(
-                                              painter: _WedgeSheenPainter(
-                                                activeX: 0.60 + (hp.dx - 0.5) * 0.18,
-                                                activeY: 0.10 + (hp.dy - 0.5) * 0.24,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
                                     ),
                                   ),
-
-                                  if (_toasts.isNotEmpty)
-                                    Positioned(
-                                      top: 40,
-                                      left: 0,
-                                      right: 0,
-                                      child: IgnorePointer(
-                                        ignoring: false,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: _toasts
-                                              .map(
-                                                (t) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        bottom: 10,
-                                                      ),
-                                                  child: _ToastWidget(
-                                                    data: t,
-                                                    onClose: () {
-                                                      setState(() {
-                                                        _toasts.removeWhere(
-                                                          (e) => e.id == t.id,
-                                                        );
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
-                                      ),
-                                    ),
-
-                                  Positioned.fill(child: _buildDesktopCopy()),
-
-                                  Positioned.fill(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: _buildPane(
-                                            isLeft: true,
-                                            isVisible: !isRegister,
-                                            title: 'Login',
-                                            underlineWidth: 70,
-                                            cardWidth: 520,
-                                            topLift: -20,
-                                            formKey: _loginKey,
-                                            children: <Widget>[
-                                              _AuthField(
-                                                label: 'Email',
-                                                controller: _loginEmail,
-                                                focusNode: _loginEmailFocus,
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                prefixIcon: Icons.mail_outline,
-                                                validator: (value) {
-                                                  final v = (value ?? '')
-                                                      .trim();
-                                                  if (v.isEmpty) {
-                                                    return 'Email wajib diisi';
-                                                  }
-                                                  if (!v.contains('@')) {
-                                                    return 'Email tidak valid';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              _AuthField(
-                                                label: 'Password',
-                                                controller: _loginPassword,
-                                                obscureText:
-                                                    !_showLoginPassword,
-                                                textInputAction:
-                                                    TextInputAction.done,
-                                                prefixIcon: Icons
-                                                    .remove_red_eye_outlined,
-                                                validator: (value) {
-                                                  final v = (value ?? '');
-                                                  if (v.isEmpty) {
-                                                    return 'Password wajib diisi';
-                                                  }
-                                                  return null;
-                                                },
-                                                suffixWidget: _PasswordToggleIcon(
-                                                  shown: _showLoginPassword,
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _showLoginPassword =
-                                                          !_showLoginPassword;
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(height: 18),
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: _BlackButton(
-                                                  label: 'Login',
-                                                  onPressed: _submitLogin,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12),
-                                              _AuthTabs(
-                                                text: "Don't have an account?",
-                                                linkLabel: 'Sign Up',
-                                                onTap: () => _switchTab(true),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: _buildPane(
-                                            isLeft: false,
-                                            isVisible: isRegister,
-                                            title: 'Sign Up',
-                                            underlineWidth: 70,
-                                            cardWidth: 520,
-                                            topLift: 0,
-                                            formKey: _registerKey,
-                                            children: <Widget>[
-                                              _AuthField(
-                                                label: 'Username',
-                                                controller: _regName,
-                                                focusNode: _registerNameFocus,
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                prefixIcon:
-                                                    Icons.person_outline,
-                                                validator: (value) {
-                                                  if ((value ?? '')
-                                                      .trim()
-                                                      .isEmpty) {
-                                                    return 'Username wajib diisi';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              _AuthField(
-                                                label: 'Email',
-                                                controller: _regEmail,
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                prefixIcon: Icons.mail_outline,
-                                                validator: (value) {
-                                                  final v = (value ?? '')
-                                                      .trim();
-                                                  if (v.isEmpty) {
-                                                    return 'Email wajib diisi';
-                                                  }
-                                                  if (!v.contains('@')) {
-                                                    return 'Email tidak valid';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              _AuthField(
-                                                label: 'Password',
-                                                controller: _regPassword,
-                                                obscureText:
-                                                    !_showRegisterPassword,
-                                                textInputAction:
-                                                    TextInputAction.done,
-                                                prefixIcon: Icons
-                                                    .remove_red_eye_outlined,
-                                                validator: (value) {
-                                                  final v = (value ?? '');
-                                                  if (v.isEmpty) {
-                                                    return 'Password wajib diisi';
-                                                  }
-                                                  if (v.isEmpty) {
-                                                    return 'Password tidak valid';
-                                                  }
-                                                  return null;
-                                                },
-                                                suffixWidget: _PasswordToggleIcon(
-                                                  shown: _showRegisterPassword,
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _showRegisterPassword =
-                                                          !_showRegisterPassword;
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(height: 18),
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: _BlackButton(
-                                                  label: 'Sign Up',
-                                                  onPressed: _submitRegister,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12),
-                                              _AuthTabs(
-                                                text:
-                                                    'Already have an account?',
-                                                linkLabel: 'Login',
-                                                onTap: () => _switchTab(false),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+
+                              if (_toasts.isNotEmpty)
+                                Positioned(
+                                  top: 40,
+                                  left: 0,
+                                  right: 0,
+                                  child: IgnorePointer(
+                                    ignoring: false,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: _toasts
+                                          .map(
+                                            (t) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                bottom: 10,
+                                              ),
+                                              child: _ToastWidget(
+                                                data: t,
+                                                onClose: () {
+                                                  setState(() {
+                                                    _toasts.removeWhere(
+                                                      (e) => e.id == t.id,
+                                                    );
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+
+                              Positioned.fill(child: _buildDesktopCopy()),
+
+                              Positioned.fill(
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: _buildPane(
+                                        isLeft: true,
+                                        isVisible: !isRegister,
+                                        title: 'Login',
+                                        underlineWidth: 70,
+                                        cardWidth: 520,
+                                        topLift: -20,
+                                        formKey: _loginKey,
+                                        children: <Widget>[
+                                          _AuthField(
+                                            label: 'Email',
+                                            controller: _loginEmail,
+                                            focusNode: _loginEmailFocus,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            prefixIcon: Icons.mail_outline,
+                                            validator: (value) {
+                                              final v = (value ?? '').trim();
+                                              if (v.isEmpty) {
+                                                return 'Email wajib diisi';
+                                              }
+                                              if (!v.contains('@')) {
+                                                return 'Email tidak valid';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          _AuthField(
+                                            label: 'Password',
+                                            controller: _loginPassword,
+                                            obscureText: !_showLoginPassword,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            prefixIcon:
+                                                Icons.remove_red_eye_outlined,
+                                            validator: (value) {
+                                              final v = (value ?? '');
+                                              if (v.isEmpty) {
+                                                return 'Password wajib diisi';
+                                              }
+                                              return null;
+                                            },
+                                            suffixWidget: _PasswordToggleIcon(
+                                              shown: _showLoginPassword,
+                                              onTap: () {
+                                                setState(() {
+                                                  _showLoginPassword =
+                                                      !_showLoginPassword;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(height: 18),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: _BlackButton(
+                                              label: 'Login',
+                                              onPressed: _submitLogin,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _AuthTabs(
+                                            text: "Don't have an account?",
+                                            linkLabel: 'Sign Up',
+                                            onTap: () => _switchTab(true),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: _buildPane(
+                                        isLeft: false,
+                                        isVisible: isRegister,
+                                        title: 'Sign Up',
+                                        underlineWidth: 70,
+                                        cardWidth: 520,
+                                        topLift: 0,
+                                        formKey: _registerKey,
+                                        children: <Widget>[
+                                          _AuthField(
+                                            label: 'Username',
+                                            controller: _regName,
+                                            focusNode: _registerNameFocus,
+                                            keyboardType: TextInputType.text,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            prefixIcon: Icons.person_outline,
+                                            validator: (value) {
+                                              if ((value ?? '')
+                                                  .trim()
+                                                  .isEmpty) {
+                                                return 'Username wajib diisi';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          _AuthField(
+                                            label: 'Email',
+                                            controller: _regEmail,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            prefixIcon: Icons.mail_outline,
+                                            validator: (value) {
+                                              final v = (value ?? '').trim();
+                                              if (v.isEmpty) {
+                                                return 'Email wajib diisi';
+                                              }
+                                              if (!v.contains('@')) {
+                                                return 'Email tidak valid';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          _AuthField(
+                                            label: 'Password',
+                                            controller: _regPassword,
+                                            obscureText: !_showRegisterPassword,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            prefixIcon:
+                                                Icons.remove_red_eye_outlined,
+                                            validator: (value) {
+                                              final v = (value ?? '');
+                                              if (v.isEmpty) {
+                                                return 'Password wajib diisi';
+                                              }
+                                              if (v.isEmpty) {
+                                                return 'Password tidak valid';
+                                              }
+                                              return null;
+                                            },
+                                            suffixWidget: _PasswordToggleIcon(
+                                              shown: _showRegisterPassword,
+                                              onTap: () {
+                                                setState(() {
+                                                  _showRegisterPassword =
+                                                      !_showRegisterPassword;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(height: 18),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: _BlackButton(
+                                              label: 'Sign Up',
+                                              onPressed: _submitRegister,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _AuthTabs(
+                                            text: 'Already have an account?',
+                                            linkLabel: 'Login',
+                                            onTap: () => _switchTab(false),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
+              ),
+            ),
           ),
         ),
       ),
@@ -1410,7 +1396,7 @@ class _WedgeClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final tlx = (1 - t) * 0.65 + t * 0.0;
     final blx = (1 - t) * 0.40 + t * 0.0;
-    
+
     final trx = (1 - t) * 1.0 + t * 0.34;
     final brx = (1 - t) * 1.0 + t * 0.55;
 
@@ -1420,7 +1406,7 @@ class _WedgeClipper extends CustomClipper<Path> {
       ..lineTo(size.width * brx, size.height)
       ..lineTo(size.width * blx, size.height)
       ..close();
-    
+
     return path;
   }
 
@@ -1468,7 +1454,7 @@ class ApiService {
 
   Future<String> login(String email, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulasi Jaringan
-    
+
     for (var akun in dummyAccounts) {
       if (akun['email'] == email) {
         if (akun['password'] == password) {
@@ -1478,8 +1464,11 @@ class ApiService {
             'email': akun['email'],
             'role': akun['role'],
           });
-          
-          return jwt.sign(SecretKey(_secretKey), expiresIn: const Duration(hours: 1));
+
+          return jwt.sign(
+            SecretKey(_secretKey),
+            expiresIn: const Duration(hours: 1),
+          );
         } else {
           throw Exception('Password salah!');
         }
@@ -1490,19 +1479,19 @@ class ApiService {
 
   Future<String> register(String email, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulasi Jaringan
-    
+
     for (var akun in dummyAccounts) {
       if (akun['email'] == email) {
         throw Exception('Email sudah terdaftar!');
       }
     }
-    
+
     final jwt = JWT({
       'name': 'Pendaftar Baru',
       'email': email,
       'role': 'User Biasa',
     });
-    
+
     return jwt.sign(SecretKey(_secretKey), expiresIn: const Duration(hours: 1));
   }
 }
@@ -1595,7 +1584,7 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
-  
+
   Future<void> logout() async {
     await _repository.removeToken();
     _token = null;
