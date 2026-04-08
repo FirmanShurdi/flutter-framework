@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
-
-import 'main.dart'; // To access AuthProvider and AuthPage
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'providers/auth_provider.dart';
+import 'ui/pages/auth_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
